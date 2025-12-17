@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "lyonarvex"
+  },
+  "targets": {
+    "lyonarvex": {
+      "hosting": {
+        "lyonarvex": [
+          "lyonarvex"
+        ]
+      }
+    }
+  }
+}

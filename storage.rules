@@ -1,0 +1,68 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check file size (max 10MB)
+    function isValidSize() {
+      return request.resource.size < 10 * 1024 * 1024;
+    }
+
+    // Helper function to check if file is an image
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // Helper function to check if file is a valid upload type
+    function isValidContentType() {
+      return request.resource.contentType.matches('image/.*') ||
+             request.resource.contentType.matches('application/pdf') ||
+             request.resource.contentType.matches('video/.*');
+    }
+
+    // Products folder - public read, authenticated write
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize() && isImage();
+    }
+
+    // Categories folder - public read, authenticated write
+    match /categories/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize() && isImage();
+    }
+
+    // Cover photos folder - public read, authenticated write
+    match /cover-photos/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize() && isImage();
+    }
+
+    // User uploads folder - user can only access their own files
+    match /users/{userId}/{allPaths=**} {
+      allow read: if request.auth.uid == userId;
+      allow write: if request.auth.uid == userId && isValidSize() && isValidContentType();
+    }
+
+    // General uploads folder - authenticated users can read and write
+    match /uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isValidSize() && isValidContentType();
+    }
+
+    // Temporary uploads - anyone can upload (for guest checkout, etc.)
+    match /temp/{allPaths=**} {
+      allow read: if true;
+      allow write: if isValidSize() && isImage();
+    }
+
+    // Default deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

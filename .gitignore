@@ -1,0 +1,51 @@
+# Gitignore for Next.js with pnpm, Prisma, and common exclusions
+
+# Dependencies
+/node_modules
+.pnp
+.pnp.js
+
+# Next.js build output
+/.next/
+/out/
+
+# Production artifacts
+/build
+
+# dotenv files
+.env
+.env.local
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# pnpm-specific
+/pnpm-debug.log*
+/pnpm-lock.yaml # Usually committed, but sometimes ignored in special cases. Keeping it for now.
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-workspace
+*.swp
+*.swo
+
+# Prisma cache/temp files
+/prisma/seed.ts # If you have a seed file that's not meant to be committed, otherwise keep.
+/prisma/migrations/*.js # Compiled migrations, if you're not committing them directly
+/prisma/migrations/*.d.ts # Compiled migrations, if you're not committing them directly
+
+# Kinde Configuration files
+/.clerk/ # Assuming similar Kinde temporary files as Clerk. Adjust if Kinde uses a different temp directory.
+
+# Vercel deployment cache
+.vercel/
